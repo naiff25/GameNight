@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drink Menu | Game Night Arcade</title>
+    
+    <!-- Google Fonts: Montserrat (Headers) & Fira Code (Accents/Paragraphs) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS Setup -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'arcade-dark': '#1A1A1A',
+                        'arcade-black': '#0f0f0f',
+                        'arcade-lavender': '#B19CD9',
+                        'arcade-cyan': '#00E5FF',
+                    },
+                    fontFamily: {
+                        'sans': ['Montserrat', 'sans-serif'],
+                        'mono': ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        /* Neon Text Glow */
+        .neon-text-cyan {
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7), 0 0 20px rgba(0, 229, 255, 0.5);
+        }
+        .neon-text-lavender {
+            text-shadow: 0 0 10px rgba(177, 156, 217, 0.7), 0 0 20px rgba(177, 156, 217, 0.5);
+        }
+
+        /* Hero Background Simulation for Drinks */
+        .hero-bg-menu {
+            background: linear-gradient(to bottom, rgba(15,15,15,0.8), rgba(26,26,26,1)), 
+                        url('https://placehold.co/1920x600/111/00E5FF?text=Neon+Bar+Aesthetic') center/cover no-repeat;
+            position: relative;
+        }
+
+        /* Glassmorphism Navigation */
+        .glass-nav {
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1A1A1A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00E5FF;
+        }
+
+        /* Fade-in Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Active Sidebar Link Style */
+        .nav-link.active {
+            color: #B19CD9; /* Lavender active state for this page */
+            border-left-color: #B19CD9;
+            background-color: rgba(177, 156, 217, 0.05);
+        }
+        
+        /* Mobile horizontal scroll hiding scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="antialiased font-sans text-gray-200">
+
+    <nav class="glass-nav fixed w-full z-50 top-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="index.html" class="flex-shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity">
+                    <div class="flex flex-col">
+                        <span class="text-xl md:text-2xl font-black tracking-widest leading-none text-white">GAME<span class="text-arcade-cyan">NIGHT</span></span>
+                        <span class="text-sm font-mono tracking-[0.3em] text-arcade-lavender">ARCADE</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="index.html" class="text-sm font-semibold hover:text-white text-gray-400 transition-colors duration-200 uppercase tracking-wider">Home</a>
+                    <a href="foodmenu.html" class="text-sm font-semibold hover:text-white text-gray-400 transition-colors duration-200 uppercase tracking-wider">Food</a>
+                    <a href="#" class="text-sm font-semibold text-arcade-cyan transition-colors duration-200 uppercase tracking-wider">Drinks</a>
+                    <a href="index.html#events" class="text-sm font-semibold hover:text-arcade-lavender text-gray-400 transition-colors duration-200 uppercase tracking-wider">Events</a>
+                    <a href="index.html#book" class="px-6 py-2 border-2 border-arcade-lavender text-arcade-lavender font-bold rounded-full hover:bg-arcade-lavender hover:text-arcade-black transition-all duration-300">Book a Party</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-arcade-black border-t border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="index.html" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-white border-b border-gray-800">Home</a>
+                <a href="foodmenu.html" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-white border-b border-gray-800">Food Menu</a>
+                <a href="#" class="block px-3 py-4 text-base font-medium text-arcade-cyan border-b border-gray-800">Drinks Menu</a>
+                <a href="index.html#events" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-arcade-lavender border-b border-gray-800">Events</a>
+                <a href="index.html#book" class="block px-3 py-4 text-base font-medium text-arcade-lavender hover:text-white">Book a Party</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-bg-menu pt-32 pb-16 px-4">
+        <div class="max-w-7xl mx-auto text-center fade-in">
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tight mb-4 text-white">
+                The <span class="neon-text-cyan text-arcade-cyan">Bar</span>
+            </h1>
+            <p class="text-gray-400 font-mono text-sm md:text-base max-w-2xl mx-auto">
+                Signature arcade cocktails, loaded shots, and craft local brews. We're more than just games.
+            </p>
+        </div>
+    </header>
+
+    <!-- Top Banner -->
+    <div class="bg-arcade-cyan py-3 text-arcade-black text-center text-sm md:text-base font-bold tracking-wide uppercase px-4 shadow-[0_0_15px_rgba(0,229,255,0.3)] z-20 relative">
+        <i class="fas fa-glass-martini-alt mr-2"></i> Our Signature Cocktails Are Poured Strong With 2.5oz Of Liquor
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col lg:flex-row gap-10">
+        
+        <!-- Sidebar Navigation (Desktop) & Sticky Tab Bar (Mobile) -->
+        <div class="lg:w-1/4 relative">
+            <div class="sticky top-24 bg-arcade-black lg:bg-transparent p-4 lg:p-0 rounded-xl lg:rounded-none border border-gray-800 lg:border-none z-30">
+                <h3 class="text-white font-black uppercase text-xl mb-4 hidden lg:block tracking-widest border-b border-gray-800 pb-4">Drink Menu</h3>
+                
+                <ul class="flex lg:flex-col overflow-x-auto lg:overflow-visible space-x-4 lg:space-x-0 lg:space-y-2 no-scrollbar pb-2 lg:pb-0">
+                    <li><a href="#signature" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Signature Cocktails</a></li>
+                    <li><a href="#shots" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Shots</a></li>
+                    <li><a href="#classics" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Classic Cocktails</a></li>
+                    <li><a href="#craft-beer" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Craft Beers & Ciders</a></li>
+                    <li><a href="#domestics" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Beers & Seltzers</a></li>
+                    <li><a href="#well" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">House Liquors</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Menu Content -->
+        <div class="lg:w-3/4 space-y-20">
+            
+            <section id="signature" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-martini-glass text-arcade-cyan mr-3 text-2xl"></i> Signature Cocktails
+                    </h2>
+                    <p class="text-arcade-cyan font-mono text-sm tracking-widest uppercase">Made with 2.5oz of Liquor • $12.50</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-cyan to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Donkey Kong</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Painted Donkey Watermelon Tequila, Painted Donkey Pineapple Tequila, Hornitos Tequila, pineapple juice and topped with Watermelon Red Bull.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Super Smash Berries</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Jack Daniels Apple, strawberry, grenadine, lemon juice and ginger ale.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Falcon's Punch</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Bacardi Rum, strawberry, mango, pineapple, lemon juice and club soda.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Tommy Bahama</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Bacardi Coconut Rum, passion fruit, pineapple and Sprite.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group lg:col-span-2">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Skywalker</h4>
+                            <span class="bg-arcade-cyan text-black text-xs font-bold px-2 py-1 rounded ml-2 uppercase shrink-0">Heavy Hitter</span>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Tito's, Hornitos, Jack Daniels, Bombay Saphire, blue curacao and Sprite.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Spirit Bomb</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Tito's Vodka, blue curacao and Sprite.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Princess Peach</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Jack Daniels Apple, peach and Sprite.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Sour Peach</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Jack Daniels Apple, peach, lemon juice and club soda.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Cotton Candy</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Bacardi Coconut Rum, blue curacao, pineapple and Sprite.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="shots" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-bolt text-arcade-lavender mr-3 text-2xl"></i> Level Up Shots
+                    </h2>
+                    <p class="text-arcade-lavender font-mono text-sm tracking-widest uppercase">Quick Hits</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-lavender to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- $8 Shots -->
+                    <div class="flex justify-between items-center p-4 border border-gray-800 hover:bg-white/5 transition-colors group rounded-lg">
+                        <div>
+                            <h4 class="text-base font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors">Green Tea Shot</h4>
+                            <p class="text-gray-400 text-xs mt-1">Jameson Whiskey, Peach Schnapps, and sour mix</p>
+                        </div>
+                        <span class="text-arcade-lavender font-mono font-bold whitespace-nowrap ml-4">$8</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 border border-gray-800 hover:bg-white/5 transition-colors group rounded-lg">
+                        <div>
+                            <h4 class="text-base font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors">Rad-X Shot</h4>
+                            <p class="text-gray-400 text-xs mt-1">Bacardi Coconut, Midori and lime juice</p>
+                        </div>
+                        <span class="text-arcade-lavender font-mono font-bold whitespace-nowrap ml-4">$8</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 border border-gray-800 hover:bg-white/5 transition-colors group rounded-lg">
+                        <div>
+                            <h4 class="text-base font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors">Expecto PATRONum</h4>
+                            <p class="text-gray-400 text-xs mt-1">Patron Tequila, blue curacao, simple syrup and lime juice</p>
+                        </div>
+                        <span class="text-arcade-lavender font-mono font-bold whitespace-nowrap ml-4">$8</span>
+                    </div>
+
+                    <!-- $4 Shots -->
+                    <div class="flex justify-between items-center p-4 border border-gray-800 hover:bg-white/5 transition-colors group rounded-lg bg-[#111]">
+                        <div>
+                            <h4 class="text-base font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Lemon Drop Shot</h4>
+                            <p class="text-gray-400 text-xs mt-1">Tito's Vodka, simple syrup and lemon juice</p>
+                        </div>
+                        <span class="text-arcade-cyan font-mono font-bold whitespace-nowrap ml-4">$4</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 border border-gray-800 hover:bg-white/5 transition-colors group rounded-lg bg-[#111]">
+                        <div>
+                            <h4 class="text-base font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Washington Apple Shot</h4>
+                            <p class="text-gray-400 text-xs mt-1">Jack Daniels Apple and cranberry juice</p>
+                        </div>
+                        <span class="text-arcade-cyan font-mono font-bold whitespace-nowrap ml-4">$4</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 border border-gray-800 hover:bg-white/5 transition-colors group rounded-lg bg-[#111]">
+                        <div>
+                            <h4 class="text-base font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Slurp Juice Shot</h4>
+                            <p class="text-gray-400 text-xs mt-1">Bacardi Superior, blue curacao and lime juice</p>
+                        </div>
+                        <span class="text-arcade-cyan font-mono font-bold whitespace-nowrap ml-4">$4</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 border border-gray-800 hover:bg-white/5 transition-colors group rounded-lg bg-[#111] md:col-span-2">
+                        <div>
+                            <h4 class="text-base font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Painted Donkey Tequila Shot</h4>
+                            <p class="text-gray-400 text-xs mt-1">Watermelon or Pineapple Tequila</p>
+                        </div>
+                        <span class="text-arcade-cyan font-mono font-bold whitespace-nowrap ml-4">$4</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="classics" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-glass-whiskey text-arcade-cyan mr-3 text-2xl"></i> Classic Cocktails
+                    </h2>
+                    <p class="text-arcade-cyan font-mono text-sm tracking-widest uppercase">The Standards</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-cyan to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex justify-between items-center p-4 border-b border-gray-800">
+                        <h4 class="text-lg font-bold uppercase text-white">Tokyo Tea</h4>
+                        <span class="text-arcade-cyan font-mono font-bold">$14.50</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 border-b border-gray-800">
+                        <h4 class="text-lg font-bold uppercase text-white">Long Island</h4>
+                        <span class="text-arcade-cyan font-mono font-bold">$12.50</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 border-b border-gray-800">
+                        <h4 class="text-lg font-bold uppercase text-white">Moscow Mule</h4>
+                        <span class="text-arcade-cyan font-mono font-bold">$12.50</span>
+                    </div>
+                    <div class="flex flex-col justify-center p-4 border-b border-gray-800">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="text-lg font-bold uppercase text-white">Margaritas</h4>
+                            <span class="text-arcade-cyan font-mono font-bold">$8.00</span>
+                        </div>
+                        <p class="text-gray-400 text-xs">Flavors: Classic Lime, Strawberry, Mango, Peach, Raspberry, or Pineapple</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="craft-beer" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-beer text-arcade-lavender mr-3 text-2xl"></i> Craft Beers & Ciders
+                    </h2>
+                    <p class="text-arcade-lavender font-mono text-sm tracking-widest uppercase">Rotating Local & Premium Drafts</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-lavender to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Beer Category -->
+                    <div>
+                        <h4 class="text-arcade-lavender font-black uppercase text-lg mb-3 tracking-wider">IPA</h4>
+                        <ul class="space-y-2 text-gray-300 text-sm font-medium">
+                            <li>• Elysian Space Dust</li>
+                            <li>• Stone Hazy IPA</li>
+                            <li>• Florida Ave Luminescence</li>
+                            <li>• Hidden Springs Bear Lasers</li>
+                            <li>• Florida Ave Flipa</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Beer Category -->
+                    <div>
+                        <h4 class="text-arcade-lavender font-black uppercase text-lg mb-3 tracking-wider">Ales & Wheat</h4>
+                        <ul class="space-y-2 text-gray-300 text-sm font-medium">
+                            <li>• Bluepoint Imperial Sunshine</li>
+                            <li>• Sun King Orange Vanilla Cream Ale</li>
+                            <li>• Copperpoint Bee's Squeeze</li>
+                            <li>• Suncreek Strawberry Blonde</li>
+                            <li>• Veterans Buzzin Bee Honey Rye</li>
+                            <li>• Brew Bus You're My Boy Blue</li>
+                        </ul>
+                    </div>
+
+                    <!-- Beer Category -->
+                    <div>
+                        <h4 class="text-arcade-lavender font-black uppercase text-lg mb-3 tracking-wider">Lagers & Pilsners</h4>
+                        <ul class="space-y-2 text-gray-300 text-sm font-medium">
+                            <li>• Copperpoint Lager</li>
+                            <li>• Stone Buenaveza Salt & Lime</li>
+                            <li>• Kona Longboard Lager</li>
+                            <li>• Florida Ave Dead Parrot</li>
+                        </ul>
+                    </div>
+
+                    <!-- Beer Category -->
+                    <div>
+                        <h4 class="text-arcade-lavender font-black uppercase text-lg mb-3 tracking-wider">Sour, Stout & Belgian</h4>
+                        <ul class="space-y-2 text-gray-300 text-sm font-medium">
+                            <li>• Destihl Wild Sour (Dragonfruit Mango)</li>
+                            <li>• Destihl Wild Sour (Blueberry Crumble)</li>
+                            <li>• Victory Sour Monkey</li>
+                            <li>• Left Hand Nitro Milk Stout</li>
+                            <li>• UFO White (Belgian)</li>
+                            <li>• M.I.A. Tourist Trappe</li>
+                        </ul>
+                    </div>
+
+                    <!-- Ciders -->
+                    <div class="md:col-span-2 bg-[#111] border border-gray-800 p-5 rounded-xl">
+                        <h4 class="text-arcade-lavender font-black uppercase text-lg mb-3 tracking-wider">Hard Ciders</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-300 text-sm font-medium">
+                            <p>• Cider Boys Pineapple</p>
+                            <p>• Cider Boys Strawberry Magic</p>
+                            <p>• Cider Boys Pear Naked</p>
+                            <p>• Blake's Hard Cider American Apple</p>
+                            <p>• Blake's Hard Cider Strawberry</p>
+                            <p>• Blake's Hard Cider Peach Party</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="domestics" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-can-stacked text-arcade-cyan mr-3 text-2xl"></i> Beers & Seltzers
+                    </h2>
+                    <p class="text-arcade-cyan font-mono text-sm tracking-widest uppercase">The Classics</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-cyan to-transparent mt-4"></div>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <span class="px-4 py-2 bg-gray-900 border border-gray-700 rounded-full text-white font-medium text-sm">Yuengling 16oz</span>
+                    <span class="px-4 py-2 bg-gray-900 border border-gray-700 rounded-full text-white font-medium text-sm">Bud Light 16oz</span>
+                    <span class="px-4 py-2 bg-gray-900 border border-gray-700 rounded-full text-white font-medium text-sm">Budweiser 16oz</span>
+                    <span class="px-4 py-2 bg-gray-900 border border-gray-700 rounded-full text-white font-medium text-sm">Landshark 16oz</span>
+                    <span class="px-4 py-2 bg-gray-900 border border-gray-700 rounded-full text-white font-medium text-sm">High Noon Watermelon</span>
+                    <span class="px-4 py-2 bg-gray-900 border border-gray-700 rounded-full text-white font-medium text-sm">High Noon Peach</span>
+                    <span class="px-4 py-2 bg-gray-900 border border-gray-700 rounded-full text-white font-medium text-sm">High Noon Pineapple</span>
+                </div>
+            </section>
+
+            <section id="well" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-wine-bottle text-arcade-lavender mr-3 text-2xl"></i> House Liquor
+                    </h2>
+                    <p class="text-arcade-lavender font-mono text-sm tracking-widest uppercase">Our Well • $8.00</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-lavender to-transparent mt-4"></div>
+                </div>
+
+                <div class="p-6 border border-gray-800 rounded-xl bg-[#0f0f0f]">
+                    <p class="text-gray-300 leading-loose text-sm md:text-base">
+                        Tito's Vodka <span class="mx-2 text-gray-600">|</span> 
+                        Bacardi Superior Rum <span class="mx-2 text-gray-600">|</span> 
+                        Hornitos Plata Tequila <span class="mx-2 text-gray-600">|</span> 
+                        Jack Daniels Whiskey <span class="mx-2 text-gray-600">|</span> 
+                        Jack Daniels Apple Whiskey <span class="mx-2 text-gray-600">|</span> 
+                        Bombay Saphire Gin
+                    </p>
+                </div>
+            </section>
+
+            <div class="mt-16 bg-[#0f0f0f] border border-gray-700 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                <div class="w-16 h-16 shrink-0 rounded-full bg-gray-900 flex items-center justify-center border border-gray-700">
+                    <i class="fas fa-receipt text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase text-lg mb-2">Gratuity Policy</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        To ensure a premium experience and support our dedicated team, a <strong>20% service charge</strong> is automatically included on all checks. You will still have an option to tip additional, but it is not required. No need to do the math—just focus on your high score.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-black pt-16 pb-8 border-t border-gray-900 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex flex-col mb-4">
+                        <span class="text-2xl font-black tracking-widest leading-none text-white">GAME<span class="text-arcade-cyan">NIGHT</span></span>
+                        <span class="text-sm font-mono tracking-[0.3em] text-arcade-lavender">ARCADE</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">South Florida's premier destination for drinks, dining, and free-to-play gaming.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-arcade-lavender transition-all"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-arcade-cyan transition-all"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#FF0000] transition-all"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h5 class="text-white font-bold uppercase tracking-wider mb-4">Explore</h5>
+                    <ul class="space-y-2">
+                        <li><a href="foodmenu.html" class="text-gray-400 hover:text-arcade-cyan text-sm transition-colors">Food Menu</a></li>
+                        <li><a href="index.html#events" class="text-gray-400 hover:text-arcade-lavender text-sm transition-colors">Event Calendar</a></li>
+                        <li><a href="index.html#book" class="text-gray-400 hover:text-white text-sm transition-colors">Book a Private Event</a></li>
+                        <li><a href="index.html#info" class="text-gray-400 hover:text-white text-sm transition-colors">FAQ & Rules</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Hours -->
+                <div>
+                    <h5 class="text-white font-bold uppercase tracking-wider mb-4">Visit Us</h5>
+                    <p class="text-gray-400 text-sm mb-2"><i class="fas fa-map-marker-alt text-arcade-cyan mr-2"></i> 2125 N University Drive<br>Coral Springs, FL 33071</p>
+                    <p class="text-gray-400 text-sm mb-4"><i class="fas fa-envelope text-arcade-lavender mr-2"></i> gamenightarcade@gmail.com</p>
+                    <p class="text-gray-500 font-mono text-xs">
+                        MON-SAT: 3PM - 2AM<br>
+                        SUN: Closed
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-xs text-center md:text-left mb-4 md:mb-0">&copy; 2026 Game Night Arcade. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const icon = btn.querySelector('i');
+
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                if(menu.classList.contains('hidden')){
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                } else {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            });
+
+            // Close mobile menu on link click
+            const mobileLinks = menu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+
+            // Intersection Observer for scroll fade-in animations
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+            // Navbar background opacity on scroll
+            const nav = document.querySelector('.glass-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    nav.classList.add('shadow-lg');
+                    nav.style.background = 'rgba(15, 15, 15, 0.98)';
+                } else {
+                    nav.classList.remove('shadow-lg');
+                    nav.style.background = 'rgba(26, 26, 26, 0.85)';
+                }
+            });
+
+            // ScrollSpy for Sidebar Navigation
+            const sections = document.querySelectorAll('.menu-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (scrollY >= sectionTop - 150) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current) && current !== '') {
+                        link.classList.add('active');
+                        // Scroll active item into view on mobile
+                        if(window.innerWidth < 1024) {
+                            link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

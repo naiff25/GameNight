@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu | Game Night Arcade</title>
+    
+    <!-- Google Fonts: Montserrat (Headers) & Fira Code (Accents/Paragraphs) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'arcade-dark': '#1A1A1A',
+                        'arcade-black': '#0f0f0f',
+                        'arcade-lavender': '#B19CD9',
+                        'arcade-cyan': '#00E5FF',
+                    },
+                    fontFamily: {
+                        'sans': ['Montserrat', 'sans-serif'],
+                        'mono': ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        /* Neon Text Glow */
+        .neon-text-cyan {
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7), 0 0 20px rgba(0, 229, 255, 0.5);
+        }
+        .neon-text-lavender {
+            text-shadow: 0 0 10px rgba(177, 156, 217, 0.7), 0 0 20px rgba(177, 156, 217, 0.5);
+        }
+
+        /* Hero Background Simulation */
+        .hero-bg-menu {
+            background: linear-gradient(to bottom, rgba(15,15,15,0.8), rgba(26,26,26,1)), 
+                        url('https://placehold.co/1920x600/111/B19CD9?text=Arcade+Kitchen+Vibe') center/cover no-repeat;
+            position: relative;
+        }
+
+        /* Glassmorphism Navigation */
+        .glass-nav {
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1A1A1A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563; /* Gray-600 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #B19CD9;
+        }
+
+        /* Fade-in Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Active Sidebar Link Style */
+        .nav-link.active {
+            color: #00E5FF;
+            border-left-color: #00E5FF;
+            background-color: rgba(0, 229, 255, 0.05);
+        }
+        
+        /* Mobile horizontal scroll hiding scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="antialiased font-sans text-gray-200">
+
+    <nav class="glass-nav fixed w-full z-50 top-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="index.html" class="flex-shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity">
+                    <div class="flex flex-col">
+                        <span class="text-xl md:text-2xl font-black tracking-widest leading-none text-white">GAME<span class="text-arcade-cyan">NIGHT</span></span>
+                        <span class="text-sm font-mono tracking-[0.3em] text-arcade-lavender">ARCADE</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="index.html" class="text-sm font-semibold hover:text-white text-gray-400 transition-colors duration-200 uppercase tracking-wider">Home</a>
+                    <a href="#" class="text-sm font-semibold text-arcade-cyan transition-colors duration-200 uppercase tracking-wider">Food Menu</a>
+                    <a href="index.html#events" class="text-sm font-semibold hover:text-arcade-lavender text-gray-400 transition-colors duration-200 uppercase tracking-wider">Events</a>
+                    <a href="index.html#book" class="px-6 py-2 border-2 border-arcade-lavender text-arcade-lavender font-bold rounded-full hover:bg-arcade-lavender hover:text-arcade-black transition-all duration-300">Book a Party</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-arcade-black border-t border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="index.html" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-white border-b border-gray-800">Home</a>
+                <a href="#" class="block px-3 py-4 text-base font-medium text-arcade-cyan border-b border-gray-800">Food Menu</a>
+                <a href="index.html#events" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-arcade-lavender border-b border-gray-800">Events</a>
+                <a href="index.html#book" class="block px-3 py-4 text-base font-medium text-arcade-lavender hover:text-white">Book a Party</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-bg-menu pt-32 pb-16 px-4">
+        <div class="max-w-7xl mx-auto text-center fade-in">
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tight mb-4 text-white">
+                The <span class="neon-text-lavender text-arcade-lavender">Kitchen</span>
+            </h1>
+            <p class="text-gray-400 font-mono text-sm md:text-base max-w-2xl mx-auto">
+                Scratch-made food served late. Order at the bar, and we'll buzz you when it's ready.
+            </p>
+        </div>
+    </header>
+
+    <div class="bg-arcade-lavender py-3 text-arcade-black text-center text-sm md:text-base font-bold tracking-wide uppercase px-4 shadow-[0_0_15px_rgba(177,156,217,0.3)] z-20 relative">
+        <i class="fas fa-motorcycle mr-2"></i> Kitchen is Open Late for pickup or delivery local to Coral Springs
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col lg:flex-row gap-10">
+        
+        <!-- Sidebar Navigation (Desktop) & Sticky Tab Bar (Mobile) -->
+        <div class="lg:w-1/4 relative">
+            <div class="sticky top-24 bg-arcade-black lg:bg-transparent p-4 lg:p-0 rounded-xl lg:rounded-none border border-gray-800 lg:border-none z-30">
+                <h3 class="text-white font-black uppercase text-xl mb-4 hidden lg:block tracking-widest border-b border-gray-800 pb-4">Categories</h3>
+                
+                <ul class="flex lg:flex-col overflow-x-auto lg:overflow-visible space-x-4 lg:space-x-0 lg:space-y-2 no-scrollbar pb-2 lg:pb-0">
+                    <li><a href="#hot-dogs" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Hot Dogs</a></li>
+                    <li><a href="#sandwiches" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Sandwiches</a></li>
+                    <li><a href="#burgers" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Cheeseburgers</a></li>
+                    <li><a href="#pizza" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">8" Pizzas</a></li>
+                    <li><a href="#small-plates" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Small Plates</a></li>
+                    <li><a href="#drinks" class="nav-link block px-4 py-2 text-sm font-bold uppercase tracking-wider text-gray-400 hover:text-white border-l-2 border-transparent hover:border-gray-500 transition-all whitespace-nowrap lg:whitespace-normal">Non-Alcoholic</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Menu Content -->
+        <div class="lg:w-3/4 space-y-20">
+            
+            <!-- CATEGORY: HOT DOGS -->
+            <section id="hot-dogs" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-hotdog text-arcade-cyan mr-3 text-2xl"></i> Hot Dogs
+                    </h2>
+                    <p class="text-arcade-cyan font-mono text-sm tracking-widest uppercase">All Hot Dogs Are Quarter Pound All Beef • $12</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-cyan to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Colombian Dog</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Crushed pineapple, melted cheese, potato sticks and pink sauce.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Spicy Dog</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Melted cheese, jalapenos, hot sauce, red pepper flakes, cayenne pepper and mayo.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Hawaiian Dog</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Crushed pineapple, melted cheese, bacon and Scratch Made BBQ Sauce.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Seattle Dog</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Cream cheese and crispy onions.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Chiraq Dog</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Crispy onions, pickles, jalapenos, diced cilantro salsa and mustard.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Pizza Dog</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Scratch Made Marinara Sauce, melted cheese and pepperoni.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CATEGORY: SANDWICHES -->
+            <section id="sandwiches" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-bread-slice text-arcade-lavender mr-3 text-2xl"></i> Sandwiches
+                    </h2>
+                    <p class="text-arcade-lavender font-mono text-sm tracking-widest uppercase">Signature Subs & Melts • $16</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-lavender to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-lavender transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors">Grilled Cheese w/ Bacon</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Swiss Cheese, Muenster, Provolone, cream cheese, shredded cheese, bacon and topped with garlic butter.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-lavender transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors">Ultimate Cuban White Boy</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Ham, salami, Swiss, pickles, jalapenos, mayo, and mustard served on an 8-inch hoagie roll.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-lavender transition-colors group lg:col-span-2">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors">Justin's 420 Special</h4>
+                            <span class="bg-arcade-lavender text-black text-xs font-bold px-2 py-1 rounded ml-2 uppercase shrink-0">Fan Favorite</span>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Ham, salami, pepperoni, bacon, Swiss cheese, cream cheese, thousand island dressing, crushed Doritos and jalapenos served on an 8-inch hoagie roll.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-lavender transition-colors group lg:col-span-2">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors">Game Night Sub</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Ham, salami, bacon, pickles, crispy onions, Provolone cheese, lettuce, diced cilantro salsa, mayo and mustard served on an 8-inch hoagie roll.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CATEGORY: CHEESEBURGERS -->
+            <section id="burgers" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-burger text-arcade-cyan mr-3 text-2xl"></i> Cheeseburgers
+                    </h2>
+                    <p class="text-arcade-cyan font-mono text-sm tracking-widest uppercase mb-2">Smash Style • $16</p>
+                    <p class="text-gray-500 text-sm italic">All Cheeseburgers Are Made With Fresh Patties Hand Pressed, Mixed with Salt, Pepper, Chives and Worcestershire Sauce.</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-cyan to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Smothered Cheeseburger</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Grilled hamburger topped with two strips of bacon, lettuce, diced cilantro salsa, crispy onions, pickles, melted Muenster cheese, ketchup and mayo served on a hamburger bun.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Haystack Cheeseburger</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Grilled hamburger topped with two strips of bacon, lettuce, diced cilantro salsa, crispy onions, potato sticks, melted Provolone cheese, Scratch Made BBQ Sauce and mayo.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Spicy Cheeseburger</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Grilled hamburger topped with two strips of bacon, lettuce, diced cilantro salsa, crispy onions, jalapenos, melted Swiss cheese, Frank's Hot Sauce, red pepper flakes, cayenne pepper and mayo.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Joshy Boy Cheeseburger</h4>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">Grilled hamburger topped with two strips of bacon, lettuce, diced cilantro salsa, crispy onions, jalapenos, avocado, melted Muenster cheese, and Scratch Made ZESTY Sauce.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CATEGORY: PIZZA -->
+            <section id="pizza" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-pizza-slice text-arcade-lavender mr-3 text-2xl"></i> Personal 8" Pizzas
+                    </h2>
+                    <p class="text-arcade-lavender font-mono text-sm tracking-widest uppercase">Oven Baked Bar Pies</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-lavender to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- Item -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border-b border-gray-800 hover:bg-white/5 transition-colors group rounded-lg">
+                        <div class="mb-2 sm:mb-0 pr-4">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors mb-1">Cheese</h4>
+                            <p class="text-gray-400 text-sm">Scratch made marinara sauce topped with four cheese blend.</p>
+                        </div>
+                        <span class="text-arcade-lavender font-mono font-bold text-lg whitespace-nowrap">$10</span>
+                    </div>
+                    <!-- Item -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border-b border-gray-800 hover:bg-white/5 transition-colors group rounded-lg">
+                        <div class="mb-2 sm:mb-0 pr-4">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors mb-1">Pepperoni</h4>
+                            <p class="text-gray-400 text-sm">Scratch made marinara sauce topped with four cheese blend and pepperoni.</p>
+                        </div>
+                        <span class="text-arcade-lavender font-mono font-bold text-lg whitespace-nowrap">$12</span>
+                    </div>
+                    <!-- Item -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border-b border-gray-800 hover:bg-white/5 transition-colors group rounded-lg">
+                        <div class="mb-2 sm:mb-0 pr-4">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors mb-1">Meat Lovers</h4>
+                            <p class="text-gray-400 text-sm">Scratch made marinara sauce topped with four cheese blend, pepperoni, bacon and sliced ham.</p>
+                        </div>
+                        <span class="text-arcade-lavender font-mono font-bold text-lg whitespace-nowrap">$12</span>
+                    </div>
+                    <!-- Item -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border-b border-gray-800 hover:bg-white/5 transition-colors group rounded-lg">
+                        <div class="mb-2 sm:mb-0 pr-4">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors mb-1">Spicy</h4>
+                            <p class="text-gray-400 text-sm">Scratch made marinara sauce topped with four cheese blend, jalapenos, red pepper flakes, cayenne pepper and hot sauce.</p>
+                        </div>
+                        <span class="text-arcade-lavender font-mono font-bold text-lg whitespace-nowrap">$12</span>
+                    </div>
+                    <!-- Item -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border-b border-gray-800 hover:bg-white/5 transition-colors group rounded-lg">
+                        <div class="mb-2 sm:mb-0 pr-4">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-lavender transition-colors mb-1">BBQ Hawaiian</h4>
+                            <p class="text-gray-400 text-sm">Scratch made marinara sauce topped with four cheese blend, crushed pineapple, sliced ham and scratch made BBQ sauce.</p>
+                        </div>
+                        <span class="text-arcade-lavender font-mono font-bold text-lg whitespace-nowrap">$12</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CATEGORY: SMALL PLATES -->
+            <section id="small-plates" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-utensils text-arcade-cyan mr-3 text-2xl"></i> Small Plates
+                    </h2>
+                    <p class="text-arcade-cyan font-mono text-sm tracking-widest uppercase">Apps to share</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-cyan to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">3 Street Tacos</h4>
+                            <span class="text-arcade-cyan font-mono font-bold">$12</span>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">3 corn tortillas filled with ground beef and bacon, diced cilantro salsa, shredded cheese, black beans, avocado and topped with our Scratch Made ZESTY Sauce.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">Snorlax Snacks</h4>
+                            <span class="text-arcade-cyan font-mono font-bold">$12</span>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">King's Hawaiian bread baked with garlic spread, shredded cheese, pepperoni, and honey.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">King's Hawaiian Garlic Bread</h4>
+                            <span class="text-arcade-cyan font-mono font-bold">$7</span>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">King's Hawaiian bread baked with garlic spread.</p>
+                    </div>
+                    <!-- Item -->
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 hover:border-arcade-cyan transition-colors group">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold uppercase text-white group-hover:text-arcade-cyan transition-colors">King's Cheese Garlic Bread</h4>
+                            <span class="text-arcade-cyan font-mono font-bold">$10</span>
+                        </div>
+                        <p class="text-gray-400 text-sm leading-relaxed">King's Hawaiian bread baked with garlic spread and shredded cheese.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CATEGORY: DRINKS -->
+            <section id="drinks" class="menu-section fade-in scroll-mt-28">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-black uppercase text-white mb-2 tracking-wide flex items-center">
+                        <i class="fas fa-glass-water text-arcade-lavender mr-3 text-2xl"></i> Non-Alcoholic
+                    </h2>
+                    <p class="text-arcade-lavender font-mono text-sm tracking-widest uppercase">Zero Proof Refreshments</p>
+                    <div class="h-px w-full bg-gradient-to-r from-arcade-lavender to-transparent mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="p-4 border border-gray-800 rounded-lg bg-black">
+                        <h4 class="text-lg font-bold uppercase text-white mb-2 text-arcade-lavender">Premium Soft Serve Milkshakes</h4>
+                        <p class="text-gray-400 text-sm">Choose from: Oreos, Cinnamon Toast Crunch, Fruity Pebbles, Chocolate, Strawberry, Banana and more!</p>
+                    </div>
+                    <div class="p-4 border border-gray-800 rounded-lg bg-black">
+                        <h4 class="text-lg font-bold uppercase text-white mb-2 text-arcade-lavender">Cold Brewed Iced Coffee</h4>
+                        <p class="text-gray-400 text-sm">Flavors: Vanilla, Caramel, Sugar-Free Vanilla, Sugar-Free Caramel, or Black.</p>
+                    </div>
+                    <div class="p-4 border border-gray-800 rounded-lg bg-black">
+                        <h4 class="text-lg font-bold uppercase text-white mb-2 text-arcade-lavender">Popping Boba Lemonade</h4>
+                        <p class="text-gray-400 text-sm">Flavors: Strawberry or Mango.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Policy Box -->
+            <div class="mt-16 bg-[#0f0f0f] border border-gray-700 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                <div class="w-16 h-16 shrink-0 rounded-full bg-gray-900 flex items-center justify-center border border-gray-700">
+                    <i class="fas fa-receipt text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase text-lg mb-2">Gratuity Policy</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        To ensure a premium experience and support our dedicated team, a <strong>20% service charge</strong> is automatically included on all checks. You will still have an option to tip additional, but it is not required. No need to do the math—just focus on your high score.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-black pt-16 pb-8 border-t border-gray-900 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex flex-col mb-4">
+                        <span class="text-2xl font-black tracking-widest leading-none text-white">GAME<span class="text-arcade-cyan">NIGHT</span></span>
+                        <span class="text-sm font-mono tracking-[0.3em] text-arcade-lavender">ARCADE</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">South Florida's premier destination for drinks, dining, and free-to-play gaming.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-arcade-lavender transition-all"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-arcade-cyan transition-all"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#FF0000] transition-all"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h5 class="text-white font-bold uppercase tracking-wider mb-4">Explore</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-arcade-cyan text-sm transition-colors">Food Menu</a></li>
+                        <li><a href="index.html#events" class="text-gray-400 hover:text-arcade-lavender text-sm transition-colors">Event Calendar</a></li>
+                        <li><a href="index.html#book" class="text-gray-400 hover:text-white text-sm transition-colors">Book a Private Event</a></li>
+                        <li><a href="index.html#info" class="text-gray-400 hover:text-white text-sm transition-colors">FAQ & Rules</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Hours -->
+                <div>
+                    <h5 class="text-white font-bold uppercase tracking-wider mb-4">Visit Us</h5>
+                    <p class="text-gray-400 text-sm mb-2"><i class="fas fa-map-marker-alt text-arcade-cyan mr-2"></i> 2125 N University Drive<br>Coral Springs, FL 33071</p>
+                    <p class="text-gray-400 text-sm mb-4"><i class="fas fa-envelope text-arcade-lavender mr-2"></i> gamenightarcade@gmail.com</p>
+                    <p class="text-gray-500 font-mono text-xs">
+                        MON-SAT: 3PM - 2AM<br>
+                        SUN: Closed
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-xs text-center md:text-left mb-4 md:mb-0">&copy; 2026 Game Night Arcade. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const icon = btn.querySelector('i');
+
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                if(menu.classList.contains('hidden')){
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                } else {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            });
+
+            // Close mobile menu on link click
+            const mobileLinks = menu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+
+            // Intersection Observer for scroll fade-in animations
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+            // Navbar background opacity on scroll
+            const nav = document.querySelector('.glass-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    nav.classList.add('shadow-lg');
+                    nav.style.background = 'rgba(15, 15, 15, 0.98)';
+                } else {
+                    nav.classList.remove('shadow-lg');
+                    nav.style.background = 'rgba(26, 26, 26, 0.85)';
+                }
+            });
+
+            // ScrollSpy for Sidebar Navigation
+            const sections = document.querySelectorAll('.menu-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    // Adjusted offset to trigger change earlier based on the sticky header and spacing
+                    if (scrollY >= sectionTop - 150) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current) && current !== '') {
+                        link.classList.add('active');
+                        // Scroll the active item into view on mobile horizontally
+                        if(window.innerWidth < 1024) {
+                            link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

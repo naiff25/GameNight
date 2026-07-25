@@ -609,10 +609,7 @@
                     link.classList.remove('active');
                     if (link.getAttribute('href').includes(current) && current !== '') {
                         link.classList.add('active');
-                        // Scroll active item into view on mobile
-                        if(window.innerWidth < 1024) {
-                            link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                        }
+                        // Scroll active category into view only when user clicks it
                     }
                 });
             });

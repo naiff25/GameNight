@@ -226,7 +226,8 @@
                 <div class="bg-black p-8 md:p-10 rounded-2xl border border-gray-800 neon-border-cyan fade-in" style="transition-delay: 0.2s;">
                     <h3 class="text-2xl font-black uppercase mb-6 text-white text-center">Request a Reservation</h3>
                     
-                    <form id="booking-form" class="space-y-6">
+                    <form id="booking-form" action="https://formspree.io/f/mykrbvla" method="POST" class="space-y-6" >
+                        
                         <!-- Name -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -380,18 +381,28 @@
             const form = document.getElementById('booking-form');
             const successMsg = document.getElementById('success-message');
             
-            form.addEventListener('submit', (e) => {
-                e.preventDefault(); // Prevent page reload for demo
-                
-                // Show success message and clear form
-                successMsg.classList.remove('hidden');
-                form.reset();
-                
-                // Hide message after 5 seconds
-                setTimeout(() => {
-                    successMsg.classList.add('hidden');
-                }, 5000);
-            });
+            form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+            "Accept": "application/json"
+        }
+    });
+
+    if (response.ok) {
+        successMsg.classList.remove('hidden');
+        form.reset();
+
+        setTimeout(() => {
+            successMsg.classList.add('hidden');
+        }, 5000);
+    } else {
+        alert("There was an error sending your request. Please try again.");
+    }
+});
 
             // Intersection Observer for scroll fade-in animations
             const observerOptions = {

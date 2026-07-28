@@ -54,7 +54,7 @@
             background: linear-gradient(to bottom, rgba(15,15,15,0.8), rgba(26,26,26,1)), 
                         url('https://placehold.co/1920x600/111/00E5FF?text=Neon+Bar+Aesthetic') center/cover no-repeat;
             position: relative;
-        } */
+        }
 
         /* Glassmorphism Navigation */
         .glass-nav {
@@ -488,41 +488,52 @@
                 </div>
             </section>
 
-            <div class="mt-16 bg-[#0f0f0f] border border-gray-700 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-                <div class="w-16 h-16 shrink-0 rounded-full bg-gray-900 flex items-center justify-center border border-gray-700">
-                    <i class="fas fa-receipt text-2xl text-white"></i>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold uppercase text-lg mb-2">Gratuity Policy</h4>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        To ensure a premium experience and support our dedicated team, a <strong>20% service charge</strong> is automatically included on all checks. You will still have an option to tip additional, but it is not required. No need to do the math—just focus on your high score.
-                    </p>
-                </div>
-            </div>
+            <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-</div>
+    <!-- Gratuity -->
+    <div class="bg-[#0f0f0f] border border-gray-700 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+        <div class="w-16 h-16 shrink-0 rounded-full bg-gray-900 flex items-center justify-center border border-gray-700">
+            <i class="fas fa-receipt text-2xl text-white"></i>
+        </div>
 
-<div class="mt-16 bg-[#0f0f0f] border border-gray-700 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-    <div class="w-16 h-16 shrink-0 rounded-full bg-gray-900 flex items-center justify-center border border-gray-700">
-        <i class="fas fa-file text-2xl text-white"></i>
+        <div>
+            <h4 class="text-white font-bold uppercase text-lg mb-2">
+                Gratuity Policy
+            </h4>
+
+            <p class="text-gray-400 text-sm leading-relaxed">
+                To ensure a premium experience and support our dedicated team, a
+                <strong>20% service charge</strong> is automatically included on all
+                checks. You will still have an option to tip additional, but it is
+                not required. No need to do the math—just focus on your high score.
+            </p>
+        </div>
     </div>
 
-    <div>
-        <h4 class="text-white font-bold uppercase text-lg mb-2">
-            Notices
-        </h4>
+    <!-- Notices -->
+    <div class="bg-[#0f0f0f] border border-gray-700 rounded-2xl p-8 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+        <div class="w-16 h-16 shrink-0 rounded-full bg-gray-900 flex items-center justify-center border border-gray-700">
+            <i class="fas fa-file text-2xl text-white"></i>
+        </div>
 
-        <p class="text-gray-400 text-sm leading-relaxed mb-3">
-            Ask your bartender for a <strong>complimentary</strong> side of
-            <strong>chips</strong> and a <strong>bottle of water</strong> with any
-            alcohol purchase.
-        </p>
+        <div>
+            <h4 class="text-white font-bold uppercase text-lg mb-2">
+                Notices
+            </h4>
 
-        <p class="text-gray-400 text-sm leading-relaxed">
-            <strong>All alcoholic</strong> beverages will be itemized as two items
-            on your receipt. Ask your bartender for clarification.
-        </p>
+            <p class="text-gray-400 text-sm leading-relaxed mb-3">
+                Ask your bartender for a <strong>complimentary</strong> side of
+                <strong>chips</strong> and a <strong>bottle of water</strong> with
+                any alcohol purchase.
+            </p>
+
+            <p class="text-gray-400 text-sm leading-relaxed">
+                <strong>All alcoholic</strong> beverages will be itemized as two
+                items on your receipt. Ask your bartender for clarification.
+            </p>
+        </div>
     </div>
+
 </div>
     </main>
 

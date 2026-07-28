@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Registration | Game Night Arcade</title>
+    
+    <!-- Google Fonts: Montserrat (Headers) & Fira Code (Accents/Paragraphs) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'arcade-dark': '#1A1A1A',
+                        'arcade-black': '#0f0f0f',
+                        'arcade-lavender': '#B19CD9',
+                        'arcade-cyan': '#00E5FF',
+                    },
+                    fontFamily: {
+                        'sans': ['Montserrat', 'sans-serif'],
+                        'mono': ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        /* Neon Text Glow */
+        .neon-text-cyan {
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7), 0 0 20px rgba(0, 229, 255, 0.5);
+        }
+        .neon-text-lavender {
+            text-shadow: 0 0 10px rgba(177, 156, 217, 0.7), 0 0 20px rgba(177, 156, 217, 0.5);
+        }
+
+        /* Neon Box Shadow / Borders */
+        .neon-border-cyan {
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2), inset 0 0 5px rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.4);
+        }
+        .neon-border-lavender {
+            box-shadow: 0 0 15px rgba(177, 156, 217, 0.2), inset 0 0 5px rgba(177, 156, 217, 0.1);
+            border: 1px solid rgba(177, 156, 217, 0.4);
+        }
+
+        /* Glassmorphism Navigation */
+        .glass-nav {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Form Input Styling */
+        .arcade-input {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        .arcade-input:focus {
+            outline: none;
+            border-color: #00E5FF;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+        }
+
+        /* Fade-in Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1A1A1A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #B19CD9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00E5FF;
+        }
+    </style>
+</head>
+<body class="antialiased font-sans text-gray-200">
+
+    <!-- Navigation -->
+    <nav class="glass-nav fixed w-full z-50 top-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex-shrink-0 flex items-center cursor-pointer hover:opacity-80 transition-opacity">
+                    <div class="flex flex-col">
+                        <span class="text-xl md:text-2xl font-black tracking-widest leading-none text-white">GAME<span class="text-arcade-cyan">NIGHT</span></span>
+                        <span class="text-sm font-mono tracking-[0.3em] text-arcade-lavender">ARCADE</span>
+                    </div>
+                </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="index.html#menu" class="text-sm font-semibold hover:text-white text-gray-400 transition-colors duration-200 uppercase tracking-wider">Menu</a>
+                    <a href="shop.html" class="text-sm font-semibold hover:text-white text-gray-400 transition-colors duration-200 uppercase tracking-wider">Shop</a>
+                    <a href="index.html#events" class="text-sm font-semibold hover:text-white text-gray-400 transition-colors duration-200 uppercase tracking-wider">Events</a>
+                    <a href="faq.html" class="text-sm font-semibold hover:text-white text-gray-400 transition-colors duration-200 uppercase tracking-wider">FAQ/Info</a>
+                    <a href="about_us.html" class="text-sm font-semibold hover:text-white text-gray-400 transition-colors duration-200 uppercase tracking-wider">About Us</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-arcade-black border-t border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="index.html#menu" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-white border-b border-gray-800">Menu</a>
+                <a href="shop.html" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-white border-b border-gray-800">Shop</a>
+                <a href="index.html#events" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-white border-b border-gray-800">Events</a>
+                <a href="faq.html" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-white border-b border-gray-800">FAQ / Info</a>
+                <a href="about_us.html" class="block px-3 py-4 text-base font-medium text-gray-400 hover:text-white border-b border-gray-800">About Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="pt-32 pb-12 bg-arcade-black relative overflow-hidden border-b border-gray-900">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-arcade-lavender opacity-10 blur-[150px] rounded-full pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-arcade-cyan opacity-10 blur-[150px] rounded-full pointer-events-none"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto fade-in">
+            <h2 class="text-sm font-mono text-arcade-cyan tracking-[0.2em] mb-2 uppercase">This Saturday | 6 PM</h2>
+            <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tight mb-4 text-white">
+                Game <span class="text-transparent bg-clip-text bg-gradient-to-r from-arcade-lavender to-arcade-cyan neon-text-lavender">Tourney</span>
+            </h1>
+            <p class="mt-4 text-xl text-gray-400 max-w-2xl mx-auto font-medium">
+                Cash prizes, drink specials, and ultimate bragging rights. Lock in your spot for Coral Springs' ultimate arcade competition.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <section class="py-16 bg-arcade-dark relative min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                
+                <!-- Left Side: Info & Perks -->
+                <div class="fade-in" style="transition-delay: 0.1s;">
+                    <h3 class="text-3xl font-black uppercase mb-8 text-white border-b border-gray-800 pb-4">Tournament Intel</h3>
+                    
+                    <div class="space-y-8">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-arcade-black border border-arcade-cyan flex items-center justify-center neon-border-cyan mt-1">
+                                <i class="fas fa-trophy text-arcade-cyan text-xl"></i>
+                            </div>
+                            <div class="ml-6">
+                                <h4 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Cash Prizes & Glory</h4>
+                                <p class="text-gray-400 leading-relaxed text-sm">
+                                    Compete against the local elite for real cash payouts, custom trophies, and ultimate bragging rights across our featured tournament lineup.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-arcade-black border border-arcade-lavender flex items-center justify-center neon-border-lavender mt-1">
+                                <i class="fas fa-cocktail text-arcade-lavender text-xl"></i>
+                            </div>
+                            <div class="ml-6">
+                                <h4 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Exclusive Drink Specials</h4>
+                                <p class="text-gray-400 leading-relaxed text-sm">
+                                    Keep your reactions sharp and your spirits high with themed cocktail deals and craft beer specials running all evening long for participants and spectators.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-arcade-black border border-arcade-cyan flex items-center justify-center neon-border-cyan mt-1">
+                                <i class="fas fa-gamepad text-arcade-cyan text-xl"></i>
+                            </div>
+                            <div class="ml-6">
+                                <h4 class="text-xl font-bold text-white mb-2 uppercase tracking-wide">Free Play Access</h4>
+                                <p class="text-gray-400 leading-relaxed text-sm">
+                                    All tournament registrants get full access to our entire floor of free-play arcade cabinets, console stations, and setups before and after your matches.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 bg-black p-6 rounded-xl border border-gray-800">
+                        <h5 class="text-arcade-lavender font-mono text-sm uppercase tracking-widest mb-2">Check-In Rules</h5>
+                        <p class="text-gray-500 text-sm">
+                            Players must check in at the front desk by 5:30 PM on Saturday to confirm bracket placement. Matches officially commence sharp at 6:00 PM. Space is strictly capped per bracket.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right Side: Registration Form -->
+                <div class="bg-black p-8 md:p-10 rounded-2xl border border-gray-800 neon-border-cyan fade-in" style="transition-delay: 0.2s;">
+                    <h3 class="text-2xl font-black uppercase mb-6 text-white text-center">Secure Your Spot</h3>
+                    
+                    <form id="booking-form" action="https://formspree.io/f/mzdnoayphttps://formspree.io/f/mykrbvla" method="POST" class="space-y-6">
+                        
+                        <!-- Name -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="first-name" class="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">First Name *</label>
+                                <input type="text" id="first-name" name="first-name" required class="w-full arcade-input rounded-lg px-4 py-3 text-sm" placeholder="Player One">
+                            </div>
+                            <div>
+                                <label for="last-name" class="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Last Name *</label>
+                                <input type="text" id="last-name" name="last-name" required class="w-full arcade-input rounded-lg px-4 py-3 text-sm" placeholder="Surname">
+                            </div>
+                        </div>
+
+                        <!-- Contact Info -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="email" class="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Email Address *</label>
+                                <input type="email" id="email" name="email" required class="w-full arcade-input rounded-lg px-4 py-3 text-sm" placeholder="email@example.com">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required class="w-full arcade-input rounded-lg px-4 py-3 text-sm" placeholder="(555) 000-0000">
+                            </div>
+                        </div>
+
+                        <!-- Gamertag / Handle -->
+                        <div>
+                            <label for="gamertag" class="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Gamertag / Tournament Handle *</label>
+                            <input type="text" id="gamertag" name="gamertag" required class="w-full arcade-input rounded-lg px-4 py-3 text-sm" placeholder="e.g. ArcadeMaster99">
+                        </div>
+
+                        <!-- Game Selection -->
+                        <div>
+                            <label for="game-selection" class="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Select Game / Bracket *</label>
+                            <select id="game-selection" name="game-selection" required class="w-full arcade-input rounded-lg px-4 py-3 text-sm text-gray-300">
+                                <option value="" disabled selected>Choose a tournament game</option>
+                                <option value="fighting">Fighting Games (Street Fighter / Tekken)</option>
+                                <option value="retro">Retro Arcade High-Score Challenge</option>
+                                <option value="kart">Kart Racing Showdown</option>
+                                <option value="other">Open / Other Category</option>
+                            </select>
+                        </div>
+
+                        <!-- Additional Message -->
+                        <div>
+                            <label for="message" class="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">Notes / Teammate Info (Optional)</label>
+                            <textarea id="message" name="message" rows="3" class="w-full arcade-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Let us know if you're registering as a duo or have any questions..."></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full bg-transparent border-2 border-arcade-cyan text-arcade-cyan font-black uppercase tracking-widest py-4 rounded-xl hover:bg-arcade-cyan hover:text-black transition-all duration-300 neon-border-cyan mt-4">
+                            Register Now <i class="fas fa-gamepad ml-2"></i>
+                        </button>
+                        
+                        <!-- Success Message (Hidden by default) -->
+                        <div id="success-message" class="hidden mt-4 p-4 bg-green-900/30 border border-green-500 rounded-lg text-green-400 text-center text-sm font-mono">
+                            Registration received! See you this Saturday at 6 PM.
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black pt-16 pb-8 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <img
+                        src="https://github.com/naiff25/gamenight/blob/main/content/img/logo.png?raw=true"
+                        alt="GameNight Arcade Logo"
+                        class="h-32 w-auto mb-4">
+                    <p class="text-gray-500 text-sm mb-6">South Florida's premier destination for drinks, dining, and free-to-play gaming.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.instagram.com/gamenightarcade" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-arcade-lavender transition-all"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/gamenightarcade" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-gray-400 hover:text-white hover:bg-arcade-cyan transition-all"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h5 class="text-white font-bold uppercase tracking-wider mb-4">Explore</h5>
+                    <ul class="space-y-2">
+                        <li><a href="index.html#menu" class="text-gray-400 hover:text-white text-sm transition-colors">Food & Drink Menu</a></li>
+                        <li><a href="index.html#events" class="text-gray-400 hover:text-white text-sm transition-colors">Event Calendar</a></li>
+                        <li><a href="book.html" class="text-gray-400 hover:text-white text-sm transition-colors">Book a Private Event</a></li>
+                        <li><a href="about_us.html" class="text-gray-400 hover:text-white text-sm transition-colors">About Us</a></li>
+                        <li><a href="faq.html" class="text-gray-400 hover:text-white text-sm transition-colors">FAQ & Info</a></li>
+                    </ul>
+                </div>
+
+                <!-- Retail / Merch -->
+                <div>
+                    <h5 class="text-white font-bold uppercase tracking-wider mb-4">Shop</h5>
+                    <ul class="space-y-2">
+                        <li><a href="https://www.mercari.com/u/538186083/?tracking_ref_id=m26330654985" class="text-gray-400 hover:text-white text-sm transition-colors flex items-center">
+                            Online (Mercari) <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                        </a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Hours -->
+                <div>
+                    <h5 class="text-white font-bold uppercase tracking-wider mb-4">Visit Us</h5>
+                    <p class="text-gray-400 text-sm mb-2"><a href="https://www.google.com/maps/search/?api=1&query=2125+N+University+Drive,+Coral+Springs,+FL+33071" target="_blank" rel="noopener noreferrer" class="hover:text-arcade-cyan transition-colors"><i class="fas fa-map-marker-alt text-arcade-cyan mr-2"></i> 2125 N University Drive<br> Coral Springs, FL 33071</a></p>
+                    <p class="text-gray-400 text-sm mb-4"><i class="fas fa-envelope text-arcade-lavender mr-2"></i> <a href="mailto:gamenightarcade@gmail.com" class="hover:text-arcade-lavender transition-colors">gamenightarcade@gmail.com</a></p>
+                    <p class="text-gray-500 font-mono text-xs">
+                        MON-SAT: 3PM - 2AM<br>
+                        SUN: Closed
+                    </p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-600 text-xs text-center md:text-left mb-4 md:mb-0">&copy; 2026 Game Night Arcade. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const icon = btn.querySelector('i');
+
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                if(menu.classList.contains('hidden')){
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                } else {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            });
+
+            // Handle Form Submission via Formspree
+            const form = document.getElementById('booking-form');
+            const successMsg = document.getElementById('success-message');
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: new FormData(form),
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                });
+
+                if (response.ok) {
+                    successMsg.classList.remove('hidden');
+                    form.reset();
+
+                    setTimeout(() => {
+                        successMsg.classList.add('hidden');
+                    }, 5000);
+                } else {
+                    alert("There was an error sending your registration. Please try again.");
+                }
+            });
+
+            // Intersection Observer for scroll fade-in animations
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(el => observer.observe(el));
+
+            // Navbar background opacity on scroll
+            const nav = document.querySelector('.glass-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    nav.classList.add('shadow-lg');
+                    nav.style.background = 'rgba(15, 15, 15, 0.95)';
+                } else {
+                    nav.classList.remove('shadow-lg');
+                    nav.style.background = 'rgba(26, 26, 26, 0.8)';
+                }
+            });
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body>
+
+<h1>This is a Heading</h1>
+<p>This is a paragraph.</p>
+
+</body>
+</html>
+
+

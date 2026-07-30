@@ -535,8 +535,8 @@
         </div>
     </section>
     
-        <!-- Restaurant Guru Award -->
-            <div class="mt-12 flex justify-center items-center opacity-80 hover:opacity-100 transition duration-300">
+        <!-- Restaurant Guru Award old -->
+           <!-- <div class="mt-12 flex justify-center items-center opacity-80 hover:opacity-100 transition duration-300">
                 <a href="https://restaurantguru.com/Game-Night-Coral-Springs"
                target="_blank"
                rel="noopener noreferrer"
@@ -551,7 +551,55 @@
             </p>
         </div>
     </a>
+</div> -->
+
+    <!-- Restaurant Guru Award -->
+<div class="flex justify-center items-center py-12">
+    <link href="https://awards.infcdn.net/2024/circle_v2.css" rel="stylesheet">
+
+    <div id="circle-r-ribbon"
+         onclick="if(event.target.nodeName.toLowerCase() != 'a') { window.open(this.querySelector('.r-ribbon_title').href); return 0; }">
+
+        <div class="r-ribbon_ahead">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 width="160" height="160" viewBox="0 0 160 160">
+                <defs>
+                    <path id="heading-arc" d="M 30 80 a 50 50 0 1 1 100 0"></path>
+                </defs>
+                <text class="r-ribbon_ahead-heading" fill="#000" text-anchor="middle">
+                    <textPath startOffset="50%" xlink:href="#heading-arc">
+                        Recommended
+                    </textPath>
+                </text>
+            </svg>
+        </div>
+
+        <p class="r-ribbon_year">2025</p>
+
+        <a href="https://restaurantguru.com/Game-Night-Coral-Springs"
+           class="r-ribbon_title f14"
+           target="_blank">
+            Game Night Arcade
+        </a>
+
+        <div class="r-ribbon_ahead r-ribbon_ahead-bottom">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 width="120" height="120" viewBox="0 0 120 120">
+                <defs>
+                    <path id="subheading-arc" d="M 12 60 a 48 48 0 0 0 96 0"></path>
+                </defs>
+                <text class="r-ribbon_ahead-subh" fill="#000" text-anchor="middle">
+                    <textPath startOffset="50%" xlink:href="#subheading-arc">
+                        Restaurant Guru
+                    </textPath>
+                </text>
+            </svg>
+        </div>
+    </div>
 </div>
+
+
+    <!-- Footer -->
     
     <footer class="bg-black pt-16 pb-8 border-t border-gray-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

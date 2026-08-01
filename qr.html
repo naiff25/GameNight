@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu QR Code</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+    }
+
+    .qr-container {
+        position: relative;
+        padding: 20px;
+        background: white;
+    }
+
+    #qrcode {
+        position: relative;
+    }
+
+    #qrcode img {
+        display: block;
+    }
+
+    .logo {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        object-fit: contain;
+        background: white;
+        padding: 8px;
+        border-radius: 12px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+</head>
+
+<body>
+
+<div class="qr-container">
+    <div id="qrcode"></div>
+
+    <img 
+        class="logo"
+        src="https://github.com/naiff25/gamenight/blob/main/content/img/logo.png?raw=true"
+        alt="Logo">
+</div>
+
+<script>
+    const menuURL = "https://raw.githubusercontent.com/naiff25/gamenight/2ca880310fda7c7652fc9386f16b4c5213f22b4a/Menu/Menu.pdf";
+
+    new QRCode(document.getElementById("qrcode"), {
+        text: menuURL,
+        width: 300,
+        height: 300,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+</script>
+
+</body>
+</html>
